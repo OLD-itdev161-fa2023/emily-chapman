@@ -1,7 +1,11 @@
 import express from 'express';
+import connectDatabase from './config/db';
 
 //Initialize express application
 const app = express();
+
+//Connect to Database
+connectDatabase();
 
 //Create API endpoints
 app.get('/', (req, res) => 
