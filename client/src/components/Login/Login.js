@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
+import axios from 'axios';
 import {useHistory} from 'react-router-dom';
 
 const Login = ({authenticateUser}) => {
@@ -78,7 +79,7 @@ const Login = ({authenticateUser}) => {
                 <button onClick={() => loginUser()}>Login</button>
             </div>
             <div>
-                {errors && errors.map(
+                {errors && errors.map(error =>
                     <div key={error.msg}>{error.msg}</div>
                 )}
             </div>

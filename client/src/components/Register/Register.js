@@ -107,7 +107,7 @@ const Register = ({authenticateUser}) => {
                 <button onClick={() => registerUser()}>Register</button>
             </div>
             <div>
-                {errors && errors.map(
+                {errors && errors.map(error =>
                     <div key={error.msg}>{error.msg}</div>
                 )}
             </div>
