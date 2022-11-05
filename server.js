@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from 'config';
 import User from './models/User';
-import Post from '.models/Post';
+import Post from './models/Post';
 import auth from './middleware/auth';
 
 //Initialize express application
@@ -167,6 +167,18 @@ app.post(
     }
 );
 
+app.get('/api/posts', auth, async (req, res) => {
+    try {
+        const posts = await Post.find().sort({date: -1});
+
+        res.json(posts);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error.');
+    }
+});
+
+//Return JSON Token
 const returnToken = (user, res) => {
     const payload = {
         user: {
