@@ -178,6 +178,22 @@ app.get('/api/posts', auth, async (req, res) => {
     }
 });
 
+app.get('/api/posts/:id', auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+
+        //Make sure the post was found
+        if (!post) {
+            res.status(400).json({msg: 'Post not found.'});
+        }
+
+        res.json(post);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error.');
+    }
+});
+
 //Return JSON Token
 const returnToken = (user, res) => {
     const payload = {
