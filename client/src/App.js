@@ -4,37 +4,22 @@ import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 import './App.css';
 import Register from './components/Register/Register';
 import Login from './components/Login/Login';
+import PostList from './components/PostList/PostList';
+import Post from './components/Post/Post';
 
 class App extends React.Component {
   state = {
     posts: [],
+    post: null,
     token: null,
     user: null
+  };
+
+  componentDidMount() {
+    this.authenticateUser();
   }
 
-loadData = () => {
-  const {token} = this.state;
-
-  if (token) {
-    const config = {
-      headers: {
-        'x-auth-token': token
-      }
-    };
-
-    axios.get('http://localhost:5000', config)
-    .then(response => {
-      this.setState({
-        posts: response.data
-      });
-    })
-    .catch(error => {
-      console.error(`Error fetching data: ${error}`);
-    });
-  }
-};
-
-authenticateUser = () => {
+  authenticateUser = () => {
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -70,6 +55,35 @@ authenticateUser = () => {
     }
   }
 
+  loadData = () => {
+    const {token} = this.state;
+
+    if (token) {
+      const config = {
+        headers: {
+          'x-auth-token': token
+        }
+      };
+
+      axios.get('http://localhost:5000/api/posts', config)
+      .then(response => {
+        this.setState({
+          posts: response.data
+        });
+      })
+      .catch(error => {
+        console.error(`Error fetching data: ${error}`);
+      });
+    }
+  };
+
+  viewPost = post => {
+    console.log(`View ${post.title}`);
+    this.setState ({
+      post: post
+    });
+  };
+
   logOut = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -77,7 +91,7 @@ authenticateUser = () => {
   }
 
   render() {
-    let {user, posts} = this.state;
+    let {user, posts, post} = this.state;
     const authProps = {
       authenticateUser: this.authenticateUser
     }
@@ -102,25 +116,22 @@ authenticateUser = () => {
             </ul>
           </header>
           <main>
-            <Route exact path="/">
-              {user ? (
-                <React.Fragment>
-                  <div>Hello {user}!</div>
-                  <div>
-                    {posts.map(post => (
-                      <div key={post._id}>
-                        <h1>{post.title}</h1>
-                        <p>{post.body}</p>
-                      </div>
-                    ))}
-                  </div>
-                </React.Fragment>) :
-                (<React.Fragment>
-                  Please register or login!
-                </React.Fragment>)
-              }
-            </Route>
             <Switch>
+              <Route exact path="/">
+                {user ? (
+                  <React.Fragment>
+                    <div>Hello {user}!</div>
+                    <PostList posts={posts} clickPost={this.viewPost} />
+                  </React.Fragment>
+                  ) : (
+                  <React.Fragment>
+                    Please register or login!
+                  </React.Fragment>
+                )}
+              </Route>
+              <Route path="/posts:postId">
+                    <Post post={post} />
+              </Route>
               <Route 
                 exact path="/register"
                 render={() => <Register {...authProps} />}
