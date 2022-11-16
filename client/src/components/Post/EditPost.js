@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import {useHistory} from 'react-router-dom';
 import './styles.css';
@@ -13,7 +13,7 @@ const EditPost = ({token, post, onPostUpdated}) => {
     const {title, body} = postData;
 
     const onChange = e => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
 
         setPostData ({
             ...postData,
@@ -25,12 +25,12 @@ const EditPost = ({token, post, onPostUpdated}) => {
         if (!title || !body) {
             console.log('Title and body are required.');
         } else {
-            try {
-                const newPost = {
-                    title: title,
-                    body: body
-                };
+            const newPost = {
+                title: title,
+                body: body
+            };
 
+            try {
                 const config = {
                     headers: {
                         'Content-Type': 'application/json',
