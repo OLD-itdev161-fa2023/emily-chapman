@@ -10,7 +10,7 @@
 }
 
 .postListItem p {
-    max-width: 50px;
+    max-width: 500px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
